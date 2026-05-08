@@ -10,6 +10,10 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.mpg.com.mx">
   <meta name="theme-color" content="#1A1A1A">
+  
+  <!-- iOS Safari status bar styling -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -156,6 +160,7 @@
       padding: 0.875rem var(--gutter);
       max-width: var(--content-max);
       margin: 0 auto;
+      gap: 0.5rem;
     }
     .nav__brand {
       display: flex;
@@ -164,9 +169,20 @@
       color: var(--mpg-white);
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 0.75rem;
-      letter-spacing: 0.18em;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-shrink: 1;
+      min-width: 0;
+    }
+    @media (min-width: 640px) {
+      .nav__brand {
+        font-size: 0.75rem;
+        letter-spacing: 0.18em;
+      }
     }
     .nav__menu {
       display: none;
@@ -185,17 +201,26 @@
     .nav__link:hover { color: var(--mpg-white); }
     .nav__cta {
       display: inline-flex;
-      padding: 0.5rem 1rem;
+      padding: 0.625rem 1.25rem;
       border: 1px solid var(--mpg-red);
       background: var(--mpg-red);
       color: var(--mpg-white);
       font-family: var(--font-display);
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: 600;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       border-radius: 999px;
       transition: background var(--dur-fast) ease, transform var(--dur-fast) ease;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    @media (min-width: 640px) {
+      .nav__cta {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.16em;
+      }
     }
     .nav__cta:hover { background: var(--mpg-red-bright); transform: translateY(-1px); }
     @media (min-width: 1024px) {
@@ -453,6 +478,22 @@
       cursor: pointer;
       overflow: hidden;
     }
+    .section-card__teaser::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(227, 6, 19, 0.15) 0%, transparent 70%);
+      opacity: 0;
+      transform: scale(0);
+      transition: opacity 600ms var(--ease-out-snap), transform 600ms var(--ease-out-snap);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .section-card__teaser:active::before {
+      opacity: 1;
+      transform: scale(2);
+      transition: opacity 0ms, transform 0ms;
+    }
     .section-card__teaser-media {
       aspect-ratio: 16/7;
       min-height: 240px;
@@ -487,6 +528,16 @@
       text-transform: uppercase;
       border: 2px solid var(--mpg-white);
       box-shadow: var(--shadow-lg);
+      animation: badgePulse 3s ease-in-out infinite;
+    }
+    @keyframes badgePulse {
+      0%, 100% { transform: scale(1); box-shadow: var(--shadow-lg); }
+      50% { transform: scale(1.05); box-shadow: 0 10px 30px rgba(227, 6, 19, 0.3), 0 24px 64px rgba(0,0,0,0.15); }
+    }
+    .section-card__teaser:hover .section-card__badge {
+      animation-play-state: paused;
+      transform: scale(1.08);
+      box-shadow: 0 12px 36px rgba(227, 6, 19, 0.4), 0 28px 72px rgba(0,0,0,0.18);
     }
     .section-card__body {
       padding: clamp(2rem, 4vw, 3rem);
@@ -499,6 +550,11 @@
       text-transform: uppercase;
       color: var(--mpg-charcoal);
       margin-bottom: 1rem;
+      transition: color 360ms var(--ease-out-soft), transform 360ms var(--ease-out-soft);
+    }
+    .section-card__teaser:hover .section-card__title {
+      color: var(--mpg-red);
+      transform: translateX(4px);
     }
     .section-card__lede {
       font-size: 1rem;
@@ -1347,27 +1403,22 @@
 
   /* ===================================================================
      THREE.JS INTERACTIVE HERO LIGHTS
-     Recreates the subtle red light streaks from background with interactivity
+     Ultra-smooth: slower pulsing, fluid parallax, no vibration
   =================================================================== */
   (function initHeroLights() {
     const canvas = document.getElementById('hero-canvas');
     const hero = document.getElementById('hero');
     if (!canvas || !hero || !window.THREE) return;
 
-    // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 10;
 
-    const renderer = new THREE.WebGLRenderer({ 
-      canvas, 
-      alpha: true, 
-      antialias: true 
-    });
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Create radial gradient texture for light streaks
+    // Create gradient texture
     function createGradientTexture() {
       const size = 512;
       const canvas = document.createElement('canvas');
@@ -1376,21 +1427,20 @@
       const context = canvas.getContext('2d');
       
       const gradient = context.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
-      gradient.addColorStop(0, 'rgba(227, 6, 19, 0.6)');
-      gradient.addColorStop(0.3, 'rgba(227, 6, 19, 0.3)');
-      gradient.addColorStop(0.6, 'rgba(139, 0, 0, 0.15)');
+      gradient.addColorStop(0, 'rgba(227, 6, 19, 0.7)');
+      gradient.addColorStop(0.3, 'rgba(227, 6, 19, 0.4)');
+      gradient.addColorStop(0.6, 'rgba(139, 0, 0, 0.2)');
       gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
       
       context.fillStyle = gradient;
       context.fillRect(0, 0, size, size);
       
-      const texture = new THREE.CanvasTexture(canvas);
-      return texture;
+      return new THREE.CanvasTexture(canvas);
     }
 
     const gradientTexture = createGradientTexture();
 
-    // Left red light streak (diagonal, like in the original)
+    // Left light
     const leftGeometry = new THREE.PlaneGeometry(18, 12);
     const leftMaterial = new THREE.MeshBasicMaterial({
       map: gradientTexture,
@@ -1401,10 +1451,10 @@
     });
     const leftLight = new THREE.Mesh(leftGeometry, leftMaterial);
     leftLight.position.set(-6, 0, 0);
-    leftLight.rotation.z = Math.PI * 0.15; // Slight rotation for diagonal effect
+    leftLight.rotation.z = Math.PI * 0.15;
     scene.add(leftLight);
 
-    // Right red light streak (diagonal, opposite direction)
+    // Right light
     const rightGeometry = new THREE.PlaneGeometry(18, 12);
     const rightMaterial = new THREE.MeshBasicMaterial({
       map: gradientTexture,
@@ -1415,10 +1465,10 @@
     });
     const rightLight = new THREE.Mesh(rightGeometry, rightMaterial);
     rightLight.position.set(6, 0, 0);
-    rightLight.rotation.z = -Math.PI * 0.15; // Opposite rotation
+    rightLight.rotation.z = -Math.PI * 0.15;
     scene.add(rightLight);
 
-    // Add subtle particles for atmosphere
+    // Particles
     const particlesGeometry = new THREE.BufferGeometry();
     const particlesCount = 150;
     const positions = new Float32Array(particlesCount * 3);
@@ -1438,80 +1488,98 @@
     const particles = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particles);
 
-    // Mouse/touch tracking with smooth interpolation
+    // State with damping
     const mouse = { x: 0, y: 0 };
     const targetMouse = { x: 0, y: 0 };
+    const smoothMouse = { x: 0, y: 0 }; // Extra smoothing layer
+    let scrollProgress = 0;
+    let targetScrollProgress = 0;
+    let time = 0;
     
     function updateMousePosition(clientX, clientY) {
       targetMouse.x = (clientX / window.innerWidth) * 2 - 1;
       targetMouse.y = -(clientY / window.innerHeight) * 2 + 1;
     }
 
-    window.addEventListener('mousemove', (e) => {
-      updateMousePosition(e.clientX, e.clientY);
-    });
-
+    window.addEventListener('mousemove', (e) => updateMousePosition(e.clientX, e.clientY));
     window.addEventListener('touchmove', (e) => {
-      if (e.touches.length > 0) {
-        updateMousePosition(e.touches[0].clientX, e.touches[0].clientY);
-      }
+      if (e.touches.length > 0) updateMousePosition(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
-
-    // Scroll-based intensity
-    let scrollProgress = 0;
 
     function updateScroll() {
       const heroHeight = hero.offsetHeight;
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      scrollProgress = Math.min(scrollTop / (heroHeight * 0.8), 1);
+      targetScrollProgress = Math.min(scrollTop / (heroHeight * 0.8), 1);
     }
 
     window.addEventListener('scroll', updateScroll, { passive: true });
     updateScroll();
 
-    // Animation loop
+    // Animation loop with ultra-smooth damping
     function animate() {
       requestAnimationFrame(animate);
+      time += 0.008; // Slower time increment
 
-      // Smooth mouse interpolation (lerp)
-      mouse.x += (targetMouse.x - mouse.x) * 0.03;
-      mouse.y += (targetMouse.y - mouse.y) * 0.03;
+      // Double-layer smooth interpolation for silky movement
+      mouse.x += (targetMouse.x - mouse.x) * 0.015; // Very slow lerp
+      mouse.y += (targetMouse.y - mouse.y) * 0.015;
+      
+      smoothMouse.x += (mouse.x - smoothMouse.x) * 0.02; // Second smoothing layer
+      smoothMouse.y += (mouse.y - smoothMouse.y) * 0.02;
 
-      // Update light positions based on mouse with subtle movement
-      const offsetX = mouse.x * 2;
-      const offsetY = mouse.y * 1.5;
+      // Smooth scroll progress
+      scrollProgress += (targetScrollProgress - scrollProgress) * 0.02;
 
+      // Slow, gentle pulsing (10-second cycle)
+      const pulse = Math.sin(time * 0.3) * 0.08 + 1; // Much slower and subtler
+      
+      // Dramatic but smooth parallax
+      const offsetX = smoothMouse.x * 4;
+      const offsetY = smoothMouse.y * 3;
+
+      // Update positions with smoothed values
       leftLight.position.x = -6 + offsetX;
       leftLight.position.y = 0 + offsetY;
       
       rightLight.position.x = 6 + offsetX;
       rightLight.position.y = 0 + offsetY;
 
-      // Update opacity based on scroll (intensify effect)
+      // Smooth opacity transition
       const baseOpacity = 0.35;
-      const maxOpacity = 0.75;
-      const currentOpacity = baseOpacity + (maxOpacity - baseOpacity) * scrollProgress;
+      const maxOpacity = 0.85;
+      const scrollOpacity = baseOpacity + (maxOpacity - baseOpacity) * scrollProgress;
+      const finalOpacity = scrollOpacity * pulse;
       
-      leftMaterial.opacity = currentOpacity;
-      rightMaterial.opacity = currentOpacity;
+      leftMaterial.opacity = finalOpacity;
+      rightMaterial.opacity = finalOpacity;
 
-      // Subtle scale pulse based on scroll
-      const scale = 1 + scrollProgress * 0.3;
-      leftLight.scale.set(scale, scale, 1);
-      rightLight.scale.set(scale, scale, 1);
+      // Smooth scale with pulse and scroll
+      const scrollScale = 1 + scrollProgress * 0.4;
+      const finalScale = scrollScale * pulse;
+      
+      leftLight.scale.set(finalScale, finalScale, 1);
+      rightLight.scale.set(finalScale, finalScale, 1);
 
-      // Very subtle rotation
-      leftLight.rotation.z = Math.PI * 0.15 + mouse.x * 0.05;
-      rightLight.rotation.z = -Math.PI * 0.15 - mouse.x * 0.05;
+      // Very gentle rotation following mouse
+      const baseRotationLeft = Math.PI * 0.15;
+      const baseRotationRight = -Math.PI * 0.15;
+      const rotationOffset = smoothMouse.x * 0.06;
+      const rotationWave = Math.sin(time * 0.2) * 0.015; // Slow wave
+      
+      leftLight.rotation.z = baseRotationLeft + rotationOffset + rotationWave;
+      rightLight.rotation.z = baseRotationRight - rotationOffset - rotationWave;
 
-      // Subtle particle rotation
+      // Gentle particle motion
       particles.rotation.y += 0.0001;
-      particles.rotation.x = mouse.y * 0.02;
+      particles.rotation.x = smoothMouse.y * 0.025;
+      particles.rotation.z = smoothMouse.x * 0.015;
 
+      // Subtle color intensity variation on scroll
+      const colorIntensity = 0.5 + scrollProgress * 0.3;
+      
       renderer.render(scene, camera);
     }
 
-    // Handle window resize
     function onWindowResize() {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -1519,11 +1587,8 @@
     }
 
     window.addEventListener('resize', onWindowResize, false);
-
-    // Start animation
     animate();
 
-    // Cleanup when hero is out of view (performance)
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) {
