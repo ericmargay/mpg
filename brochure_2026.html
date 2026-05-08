@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MPG · Marketing Planning Group — Concepto · Impresión · Fabricación</title>
+  <meta name="description" content="MPG es una empresa con un amplio abanico de servicios: diseño, impresión y fabricación de exhibidores, mobiliario y materiales POP en cartón, MDF y metal.">
+  <meta property="og:title" content="MPG · Marketing Planning Group">
+  <meta property="og:description" content="Concepto · Impresión · Fabricación. Exhibidores, mobiliario y POP de alta calidad productiva.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.mpg.com.mx">
+  <meta name="theme-color" content="#1A1A1A">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,600;1,700&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* =================================================================
+       DESIGN TOKENS
+    ================================================================= */
+    :root {
+      /* Brand colors */
+      --mpg-red: #E30613;
+      --mpg-red-bright: #FF1A1A;
+      --mpg-red-deep: #8B0000;
+      --mpg-black: #0E0E10;
+      --mpg-night: #1A1A1A;
+      --mpg-charcoal: #2A2D34;
+      --mpg-white: #FFFFFF;
+      --mpg-paper: #FAFAFA;
+      --mpg-gray-100: #F2F2F2;
+      --mpg-gray-200: #E5E5E7;
+      --mpg-gray-300: #CFCFD3;
+      --mpg-gray-400: #9CA3AF;
+      --mpg-gray-500: #6B7280;
+      --mpg-gray-700: #3A3D45;
+
+      /* Type */
+      --font-display: 'Montserrat', system-ui, sans-serif;
+      --font-body: 'Open Sans', system-ui, sans-serif;
+
+      /* Spacing */
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.5rem;
+      --space-6: 2rem;
+      --space-7: 3rem;
+      --space-8: 4rem;
+      --space-9: 6rem;
+      --space-10: 8rem;
+
+      /* Layout */
+      --content-max: 1280px;
+      --gutter: clamp(1.25rem, 4vw, 3rem);
+
+      /* Motion */
+      --ease-out-soft: cubic-bezier(.22, .61, .36, 1);
+      --ease-out-snap: cubic-bezier(.16, 1, .3, 1);
+      --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+      --dur-fast: 180ms;
+      --dur-base: 360ms;
+      --dur-slow: 720ms;
+
+      /* Effects */
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 8px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,.06), 0 12px 32px rgba(0,0,0,.06);
+      --shadow-lg: 0 10px 24px rgba(0,0,0,.08), 0 24px 64px rgba(0,0,0,.08);
+    }
+
+    /* =================================================================
+       RESET / BASE + HIDDEN SCROLLBAR
+    ================================================================= */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { 
+      scroll-behavior: smooth; 
+      -webkit-text-size-adjust: 100%; 
+      /* Hidden scrollbar */
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+    }
+    html::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--mpg-charcoal);
+      background: var(--mpg-white);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; padding: 0; }
+    h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); margin: 0; line-height: 1.15; }
+    p { margin: 0; }
+    ul { margin: 0; padding: 0; list-style: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* =================================================================
+       LAYOUT
+    ================================================================= */
+    .container {
+      width: 100%;
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding-left: var(--gutter);
+      padding-right: var(--gutter);
+    }
+
+    /* =================================================================
+       ENTRANCE ANIMATIONS
+    ================================================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 720ms var(--ease-out-soft), transform 720ms var(--ease-out-soft);
+    }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    .reveal--delay-1.is-visible { transition-delay: 80ms; }
+    .reveal--delay-2.is-visible { transition-delay: 160ms; }
+
+    /* =================================================================
+       STICKY NAV
+    ================================================================= */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(14, 14, 16, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      transform: translateY(-100%);
+      transition: transform 480ms var(--ease-out-snap);
+    }
+    .nav.is-visible { transform: translateY(0); }
+    .nav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem var(--gutter);
+      max-width: var(--content-max);
+      margin: 0 auto;
+    }
+    .nav__brand {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      color: var(--mpg-white);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .nav__menu {
+      display: none;
+      gap: 1.75rem;
+      align-items: center;
+    }
+    .nav__link {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.72);
+      transition: color var(--dur-fast) ease;
+    }
+    .nav__link:hover { color: var(--mpg-white); }
+    .nav__cta {
+      display: inline-flex;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--mpg-red);
+      background: var(--mpg-red);
+      color: var(--mpg-white);
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      transition: background var(--dur-fast) ease, transform var(--dur-fast) ease;
+    }
+    .nav__cta:hover { background: var(--mpg-red-bright); transform: translateY(-1px); }
+    @media (min-width: 1024px) {
+      .nav__menu { display: flex; }
+    }
+
+    /* =================================================================
+       HERO — Real cover image with parallax + fallback gradient
+    ================================================================= */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100svh;
+      background: var(--mpg-black);
+      /* Fallback gradient if image doesn't load */
+      background: linear-gradient(135deg, #0E0E10 0%, #1A1A1A 50%, #2A2D34 100%);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      /* Red accent gradient overlay as fallback */
+      background: 
+        radial-gradient(ellipse 60% 80% at 95% 50%, rgba(227, 6, 19, 0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 70% at 0% 60%, rgba(139, 0, 0, 0.25) 0%, transparent 60%);
+    }
+    .hero__bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      animation: heroParallax 20s ease-in-out infinite;
+    }
+    @keyframes heroParallax {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    @keyframes heroFadeUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero__content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem var(--gutter);
+    }
+    .hero__title {
+      /* Visually hide — real logo is in the image */
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* =================================================================
+       ABOUT
+    ================================================================= */
+    .about {
+      padding: clamp(4rem, 10vh, 8rem) 0;
+      background: var(--mpg-white);
+    }
+    .about__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    @media (min-width: 1024px) {
+      .about__grid { grid-template-columns: 1fr 1fr; gap: 0; }
+    }
+    .about__wordmark {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: clamp(4rem, 11vw, 8rem);
+      color: var(--mpg-charcoal);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+    }
+    .about__claim {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--mpg-charcoal);
+      max-width: 28ch;
+      line-height: 1.5;
+    }
+    .about__claim strong { font-weight: 700; }
+    .about__body {
+      margin-top: 2.5rem;
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--mpg-gray-700);
+      max-width: 540px;
+    }
+    .about__right {
+      background: var(--mpg-black);
+      color: var(--mpg-white);
+      border-radius: 0;
+      padding: clamp(2.5rem, 5vw, 4rem) clamp(2rem, 4vw, 3.5rem);
+      min-height: 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    @media (min-width: 1024px) {
+      .about__right {
+        border-radius: 60px 0 0 60px;
+        margin-left: 2rem;
+      }
+    }
+    .about__title {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-style: italic;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--mpg-red);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+    .about__subtitle {
+      display: inline-block;
+      background: var(--mpg-red);
+      color: var(--mpg-white);
+      padding: 0.875rem 2.5rem 0.875rem 1.5rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: clamp(0.875rem, 1.4vw, 1.05rem);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      clip-path: polygon(0 0, 100% 0, 96% 100%, 0% 100%);
+    }
+    .about__copy {
+      max-width: 38ch;
+      font-size: 0.95rem;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* =================================================================
+       MATERIALS OVERVIEW
+    ================================================================= */
+    .materials {
+      padding: clamp(4rem, 10vh, 7rem) 0;
+      background: var(--mpg-white);
+    }
+    .section-title {
+      text-align: center;
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--mpg-charcoal);
+      margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+    }
+    .materials__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    @media (min-width: 640px) { .materials__grid { grid-template-columns: repeat(2, 1fr); gap: 2.5rem 2rem; } }
+    @media (min-width: 1024px) { .materials__grid { grid-template-columns: repeat(4, 1fr); gap: 0; } }
+
+    .material-card {
+      text-align: center;
+      padding: 0 clamp(0.5rem, 1.5vw, 1.25rem);
+    }
+    .material-card__shape {
+      width: clamp(120px, 14vw, 160px);
+      height: clamp(120px, 14vw, 160px);
+      margin: 0 auto 1.5rem;
+      border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: transform 600ms var(--ease-out-snap), box-shadow var(--dur-base) ease;
+    }
+    .material-card:hover .material-card__shape {
+      transform: translateY(-4px) rotate(-2deg);
+      box-shadow: var(--shadow-lg);
+    }
+    .material-card__shape img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .material-card__name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-style: italic;
+      font-size: clamp(1.25rem, 2vw, 1.5rem);
+      color: var(--mpg-charcoal);
+      margin-bottom: 0.25rem;
+    }
+    .material-card__sub {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.7rem;
+      color: var(--mpg-red);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.75rem;
+      min-height: 1em;
+    }
+    .material-card__desc {
+      font-size: 0.875rem;
+      color: var(--mpg-gray-700);
+      line-height: 1.6;
+      max-width: 24ch;
+      margin: 0 auto;
+    }
+
+    /* =================================================================
+       SECTION CARDS — Progressive Disclosure Pattern
+       First view: compact card with image + teaser
+       Expanded: full content inline
+    ================================================================= */
+    .section-cards {
+      background: var(--mpg-paper);
+      padding: clamp(3rem, 8vh, 6rem) 0;
+    }
+    .section-card {
+      margin-bottom: 2rem;
+      background: var(--mpg-white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--dur-base) ease;
+    }
+    .section-card:hover { box-shadow: var(--shadow-md); }
+
+    /* Teaser — always visible */
+    .section-card__teaser {
+      position: relative;
+      display: block;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .section-card__teaser-media {
+      aspect-ratio: 16/7;
+      min-height: 240px;
+      max-height: 480px;
+      position: relative;
+      overflow: hidden;
+    }
+    .section-card__teaser-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 800ms var(--ease-out-snap);
+    }
+    .section-card__teaser:hover .section-card__teaser-media img {
+      transform: scale(1.04);
+    }
+    .section-card__badge {
+      position: absolute;
+      bottom: 2rem;
+      right: clamp(2rem, 6vw, 5rem);
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      background: var(--mpg-night);
+      color: var(--mpg-white);
+      padding: 0.875rem 2rem;
+      border-radius: 999px;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(1.25rem, 2.6vw, 2rem);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: 2px solid var(--mpg-white);
+      box-shadow: var(--shadow-lg);
+    }
+    .section-card__body {
+      padding: clamp(2rem, 4vw, 3rem);
+    }
+    .section-card__title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--mpg-charcoal);
+      margin-bottom: 1rem;
+    }
+    .section-card__lede {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--mpg-gray-700);
+      margin-bottom: 1.5rem;
+      max-width: 65ch;
+    }
+    .section-card__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1.75rem;
+      background: var(--mpg-red);
+      color: var(--mpg-white);
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.875rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      transition: background var(--dur-base) ease, transform var(--dur-base) ease;
+    }
+    .section-card__cta:hover {
+      background: var(--mpg-red-bright);
+      transform: translateY(-2px);
+    }
+    .section-card__cta-arrow {
+      display: inline-block;
+      transition: transform 720ms var(--ease-expo);
+    }
+    .section-card[data-expanded="true"] .section-card__cta-arrow {
+      transform: rotate(90deg);
+    }
+
+    /* Expandable content — uses CSS Grid for smooth height transition */
+    .section-card__expand {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 720ms var(--ease-expo);
+      overflow: hidden;
+    }
+    .section-card[data-expanded="true"] .section-card__expand {
+      grid-template-rows: 1fr;
+    }
+    .section-card__expand-inner {
+      min-height: 0;
+      padding: 0 clamp(2rem, 4vw, 3rem) clamp(2rem, 4vw, 3rem);
+    }
+    .section-card__divider {
+      width: 100%;
+      height: 1px;
+      background: var(--mpg-gray-200);
+      margin: 2rem 0 3rem;
+    }
+
+    /* Product displays within expanded sections */
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    @media (min-width: 768px) {
+      .product-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .product-card {
+      border: 1px solid var(--mpg-gray-200);
+      padding: 1rem;
+      background: var(--mpg-white);
+      transition: transform var(--dur-base) var(--ease-out-snap), box-shadow var(--dur-base) ease;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    .product-card__media {
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      background: var(--mpg-gray-100);
+      margin-bottom: 1rem;
+    }
+    .product-card__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 800ms var(--ease-out-snap);
+    }
+    .product-card:hover .product-card__media img {
+      transform: scale(1.04);
+    }
+    .product-card__title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.875rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mpg-charcoal);
+      text-align: center;
+    }
+
+    /* Gallery for case studies */
+    .gallery {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4px;
+      margin-bottom: 3rem;
+    }
+    @media (min-width: 768px) {
+      .gallery { grid-template-columns: repeat(3, 1fr); }
+    }
+    .gallery__cell {
+      aspect-ratio: 9/16;
+      max-height: 720px;
+      overflow: hidden;
+      background: var(--mpg-night);
+    }
+    .gallery__cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1000ms var(--ease-out-snap);
+    }
+    .gallery__cell:hover img {
+      transform: scale(1.06);
+    }
+
+    /* =================================================================
+       CONTACT / FOOTER
+    ================================================================= */
+    .contact {
+      padding: clamp(4rem, 10vh, 8rem) 0 clamp(3rem, 6vh, 5rem);
+      background: var(--mpg-white);
+    }
+    .contact__inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      align-items: end;
+    }
+    @media (min-width: 1024px) {
+      .contact__inner { grid-template-columns: 1fr 1fr; gap: 4rem; }
+    }
+    .contact__url {
+      display: inline-block;
+      background: var(--mpg-black);
+      color: var(--mpg-white);
+      padding: 0.875rem 1.5rem;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.4em;
+      transition: transform var(--dur-fast) ease, background var(--dur-fast) ease;
+    }
+    .contact__url:hover { transform: translateY(-2px); background: var(--mpg-red); }
+    .contact__right {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1.5rem;
+    }
+    .contact__person {
+      font-size: 0.85rem;
+      color: var(--mpg-gray-500);
+    }
+    .contact__person-name {
+      display: block;
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--mpg-charcoal);
+      letter-spacing: 0.04em;
+      margin-top: 0.25rem;
+    }
+    .contact__person-phone {
+      display: block;
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--mpg-charcoal);
+    }
+
+    .footer-bar {
+      padding: 1.25rem 0;
+      background: var(--mpg-white);
+      border-top: 1px solid var(--mpg-gray-200);
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--mpg-gray-500);
+    }
+    .footer-bar strong { color: var(--mpg-charcoal); }
+  </style>
+</head>
+<body>
+
+<!-- STICKY NAV -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="#top">MPG · Marketing.Planning.Group</a>
+    <nav class="nav__menu">
+      <a class="nav__link" href="#about">Nosotros</a>
+      <a class="nav__link" href="#materiales">Materiales</a>
+      <a class="nav__link" href="#carton">Cartón</a>
+      <a class="nav__link" href="#mdf">MDF</a>
+      <a class="nav__link" href="#metal">Metal</a>
+      <a class="nav__link" href="#pop">POP</a>
+      <a class="nav__link" href="#mobiliario">Mobiliario</a>
+      <a class="nav__link" href="#caso-practico">Casos</a>
+    </nav>
+    <a class="nav__cta" href="#contacto">Contacto</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO — Real cover image -->
+  <section class="hero">
+    <div class="hero__bg">
+      <img src="assets/cover-hero.jpg" alt="MPG Marketing Planning Group" loading="eager">
+    </div>
+    <div class="hero__content">
+      <div style="display: inline-flex; flex-direction: column; align-items: center; gap: 1.5rem; animation: heroFadeUp 1200ms var(--ease-out-soft) both;">
+        <div style="font-family: var(--font-display); font-weight: 900; font-size: clamp(5rem, 15vw, 12rem); color: var(--mpg-white); letter-spacing: 0.08em; line-height: 1; text-shadow: 0 4px 24px rgba(0,0,0,0.5);">MPG</div>
+        <div style="font-family: var(--font-display); font-size: clamp(0.75rem, 1.8vw, 1.1rem); font-weight: 400; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(255,255,255,0.9);">Marketing.Planning.Group</div>
+        <div style="margin-top: 2rem; border: 1px solid rgba(255,255,255,0.7); padding: 0.875rem 2rem; font-family: var(--font-display); font-size: clamp(0.7rem, 1.4vw, 0.9rem); font-weight: 400; letter-spacing: 0.32em; text-transform: uppercase; color: var(--mpg-white);">Concepto · Impresión · Fabricación</div>
+        <a href="https://www.mpg.com.mx" style="margin-top: 0.5rem; padding: 0.75rem 2rem; background: var(--mpg-black); font-family: var(--font-display); font-size: clamp(0.7rem, 1.4vw, 0.85rem); font-weight: 500; letter-spacing: 0.4em; color: var(--mpg-white); transition: transform 180ms ease, color 180ms ease; display: inline-block;" onmouseover="this.style.color='#FF1A1A'; this.style.transform='translateY(-2px)'" onmouseout="this.style.color='#FFFFFF'; this.style.transform='translateY(0)'">www.mpg.com.mx</a>
+      </div>
+      <h1 class="hero__title">MPG · Marketing Planning Group — Concepto · Impresión · Fabricación</h1>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="container about__grid">
+      <div class="reveal">
+        <div class="about__wordmark">MPG</div>
+        <p class="about__claim">
+          <span>Somos una</span><br>
+          <span>empresa</span><br>
+          <span>con un amplio</span><br>
+          <strong>abanico de</strong><br>
+          <strong>servicios</strong>
+        </p>
+        <div class="about__body">
+          Identificamos necesidades, planteamos y diseñamos espacios, materiales y muebles, empaquetamos y damos seguimiento para que la satisfacción de nuestros clientes sea completa.
+        </div>
+      </div>
+
+      <aside class="about__right reveal reveal--delay-2">
+        <h2 class="about__title">
+          Amplia
+          <em>experiencia</em>
+        </h2>
+        <div class="about__subtitle">Y alta calidad productiva</div>
+        <p class="about__copy">
+          Tenemos una ventaja competitiva sostenible en resultados, implementamos, desarrollamos y damos seguimiento a los procesos.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- MATERIALS OVERVIEW -->
+  <section class="materials" id="materiales">
+    <div class="container">
+      <h2 class="section-title reveal">Materiales</h2>
+      <div class="materials__grid">
+        <article class="material-card reveal reveal--delay-1">
+          <div class="material-card__shape">
+            <img src="assets/mat-carton.jpg" alt="Cartón corrugado" loading="lazy">
+          </div>
+          <h3 class="material-card__name">cartón</h3>
+          <div class="material-card__sub">&nbsp;</div>
+          <p class="material-card__desc">
+            Ligero, soluciones creativas y personalizadas y de bajo costo sin comprometer la estética.
+          </p>
+        </article>
+
+        <article class="material-card reveal reveal--delay-2">
+          <div class="material-card__shape">
+            <img src="assets/mat-mdf.jpg" alt="MDF" loading="lazy">
+          </div>
+          <h3 class="material-card__name">mdf</h3>
+          <div class="material-card__sub">(Fibra de Densidad Media)</div>
+          <p class="material-card__desc">
+            Versatilidad en diseño, durabilidad y acabados ideales para exhibidores de larga duración.
+          </p>
+        </article>
+
+        <article class="material-card reveal">
+          <div class="material-card__shape">
+            <img src="assets/mat-metal.jpg" alt="Metal" loading="lazy">
+          </div>
+          <h3 class="material-card__name">metal</h3>
+          <div class="material-card__sub">&nbsp;</div>
+          <p class="material-card__desc">
+            Elegancia y durabilidad para exhibiciones impactantes en diversos entornos, con versátiles acabados.
+          </p>
+        </article>
+
+        <article class="material-card reveal">
+          <div class="material-card__shape">
+            <img src="assets/mat-termoformado.jpg" alt="Termoformado" loading="lazy">
+          </div>
+          <h3 class="material-card__name">termoformado</h3>
+          <div class="material-card__sub">&nbsp;</div>
+          <p class="material-card__desc">
+            Proceso de transformación del plástico, permitiendo la fabricación de empaques a medida.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRESSIVE DISCLOSURE SECTION CARDS -->
+  <section class="section-cards">
+    <div class="container">
+
+      <!-- CARTÓN -->
+      <article class="section-card reveal" id="carton" data-expanded="false">
+        <button class="section-card__teaser" onclick="toggleSection(this)">
+          <div class="section-card__teaser-media">
+            <img src="assets/div-carton.jpg" alt="Cartón" loading="lazy">
+            <div class="section-card__badge">Cartón</div>
+          </div>
+          <div class="section-card__body">
+            <h3 class="section-card__title">Cartón</h3>
+            <p class="section-card__lede">
+              Los materiales en cartón son fabricados en corrugado flauta B o C con suaje especial, impresos en selección de color. Ideales para exhibidores, pallets y displays de alto impacto visual.
+            </p>
+            <span class="section-card__cta">
+              Ver detalles
+              <span class="section-card__cta-arrow">→</span>
+            </span>
+          </div>
+        </button>
+
+        <div class="section-card__expand">
+          <div class="section-card__expand-inner">
+            <div class="section-card__divider"></div>
+            
+            <h4 style="font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 2rem; color: var(--mpg-charcoal);">Exhibidores</h4>
+            <div class="product-grid">
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/carton-exhibidor-navidad.jpg" alt="Exhibidor Navidad" loading="lazy">
+                </div>
+                <div class="product-card__title">Exhibidor Navidad</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/carton-exhibidor-gearhugger.jpg" alt="Exhibidor Gear Hugger" loading="lazy">
+                </div>
+                <div class="product-card__title">Gear Hugger Eco</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/carton-exhibidor-elmers.jpg" alt="Exhibidor Elmer's" loading="lazy">
+                </div>
+                <div class="product-card__title">Elmer's</div>
+              </div>
+            </div>
+
+            <h4 style="font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 2rem; color: var(--mpg-charcoal);">Pallets</h4>
+            <div class="product-grid">
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/pallet-nexxt.jpg" alt="Pallet Nexxt" loading="lazy">
+                </div>
+                <div class="product-card__title">Nexxt Smart Home</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/pallet-flashlyte.jpg" alt="Pallet Flashlyte" loading="lazy">
+                </div>
+                <div class="product-card__title">Flashlyte</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/pallet-hp-amd.jpg" alt="Pallet HP AMD" loading="lazy">
+                </div>
+                <div class="product-card__title">HP AMD</div>
+              </div>
+            </div>
+
+            <h4 style="font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 2rem; color: var(--mpg-charcoal);">Displays Especiales</h4>
+            <div class="product-grid">
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/arco-crayola.jpg" alt="Arco Crayola" loading="lazy">
+                </div>
+                <div class="product-card__title">Arco Crayola</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/mega-isla-officedepot.jpg" alt="Mega Isla Office Depot" loading="lazy">
+                </div>
+                <div class="product-card__title">Mega Isla</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/counter-gearhugger.jpg" alt="Counter" loading="lazy">
+                </div>
+                <div class="product-card__title">Counter</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- MDF -->
+      <article class="section-card reveal" id="mdf" data-expanded="false">
+        <button class="section-card__teaser" onclick="toggleSection(this)">
+          <div class="section-card__teaser-media">
+            <img src="assets/div-mdf.jpg" alt="MDF" loading="lazy">
+            <div class="section-card__badge" style="background: var(--mpg-red);">MDF</div>
+          </div>
+          <div class="section-card__body">
+            <h3 class="section-card__title">MDF</h3>
+            <p class="section-card__lede">
+              Fabricados en MDF de 5 o 9 mm routeados, con pintura automotiva y vinil impreso a 1200 dpi's. Perfectos para exhibidores de larga duración, islas WOW, cabeceras y puentes.
+            </p>
+            <span class="section-card__cta">
+              Ver detalles
+              <span class="section-card__cta-arrow">→</span>
+            </span>
+          </div>
+        </button>
+
+        <div class="section-card__expand">
+          <div class="section-card__expand-inner">
+            <div class="section-card__divider"></div>
+            
+            <div class="product-grid">
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/mdf-exhibidor-gatorade.jpg" alt="Exhibidor Gatorade" loading="lazy">
+                </div>
+                <div class="product-card__title">Gatorade</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/mdf-exhibidor-topochico.jpg" alt="Exhibidor Topo Chico" loading="lazy">
+                </div>
+                <div class="product-card__title">Topo Chico</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/mdf-exhibidor-nexxt.jpg" alt="Exhibidor Nexxt" loading="lazy">
+                </div>
+                <div class="product-card__title">Nexxt</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/mdf-exhibidor-santaclara.jpg" alt="Exhibidor Santa Clara" loading="lazy">
+                </div>
+                <div class="product-card__title">Santa Clara</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/mdf-exhibidor-kotex.jpg" alt="Exhibidor Kotex" loading="lazy">
+                </div>
+                <div class="product-card__title">Kotex</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/mdf-isla-off.jpg" alt="Isla OFF!" loading="lazy">
+                </div>
+                <div class="product-card__title">Isla OFF!</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/isla-wow-glade-1.jpg" alt="Isla WOW Glade" loading="lazy">
+                </div>
+                <div class="product-card__title">Isla WOW Glade</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/cabecera-bref.jpg" alt="Cabecera Bref" loading="lazy">
+                </div>
+                <div class="product-card__title">Cabecera Bref</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/cabecera-cocacola.jpg" alt="Cabecera Coca-Cola" loading="lazy">
+                </div>
+                <div class="product-card__title">Cabecera Coca-Cola</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- METAL -->
+      <article class="section-card reveal" id="metal" data-expanded="false">
+        <button class="section-card__teaser" onclick="toggleSection(this)">
+          <div class="section-card__teaser-media">
+            <img src="assets/div-metal.jpg" alt="Metal" loading="lazy">
+            <div class="section-card__badge" style="background: var(--mpg-charcoal);">Metal</div>
+          </div>
+          <div class="section-card__body">
+            <h3 class="section-card__title">Metal</h3>
+            <p class="section-card__lede">
+              Estructura tubular con alambrón y gráficos en estireno. Acabado en pintura electroestática semimate. Exhibidores, carros de mixología, racks y básculas de alta durabilidad.
+            </p>
+            <span class="section-card__cta">
+              Ver detalles
+              <span class="section-card__cta-arrow">→</span>
+            </span>
+          </div>
+        </button>
+
+        <div class="section-card__expand">
+          <div class="section-card__expand-inner">
+            <div class="section-card__divider"></div>
+            
+            <div class="product-grid">
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/metal-exhibidor-emperador.jpg" alt="Exhibidor Emperador" loading="lazy">
+                </div>
+                <div class="product-card__title">Emperador</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/metal-exhibidor-glade.jpg" alt="Exhibidor Glade" loading="lazy">
+                </div>
+                <div class="product-card__title">Glade</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/metal-exhibidor-kotex.jpg" alt="Exhibidor Kotex" loading="lazy">
+                </div>
+                <div class="product-card__title">Kotex</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/carro-mixologia-cocacola.jpg" alt="Carro Mixología Coca-Cola" loading="lazy">
+                </div>
+                <div class="product-card__title">Carro Mixología</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/carro-mixologia-topochico.jpg" alt="Carro Mixología Topo Chico" loading="lazy">
+                </div>
+                <div class="product-card__title">Topo Chico</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/carro-mixologia-hardseltzer.jpg" alt="Carro Mixología Hard Seltzer" loading="lazy">
+                </div>
+                <div class="product-card__title">Hard Seltzer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- POP -->
+      <article class="section-card reveal" id="pop" data-expanded="false">
+        <button class="section-card__teaser" onclick="toggleSection(this)">
+          <div class="section-card__teaser-media">
+            <img src="assets/div-pop.jpg" alt="POP" loading="lazy">
+            <div class="section-card__badge" style="background: rgba(255,255,255,0.9); color: var(--mpg-charcoal);">POP</div>
+          </div>
+          <div class="section-card__body">
+            <h3 class="section-card__title">POP</h3>
+            <p class="section-card__lede">
+              Material Point of Purchase para puntos de venta. Incluye sidekicks, tiras de impulso, stoppers, counters, perimetrales, glorificadores y vestimenta de góndola.
+            </p>
+            <span class="section-card__cta">
+              Ver detalles
+              <span class="section-card__cta-arrow">→</span>
+            </span>
+          </div>
+        </button>
+
+        <div class="section-card__expand">
+          <div class="section-card__expand-inner">
+            <div class="section-card__divider"></div>
+            
+            <div class="product-grid">
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/pop-sidekick-escudo.jpg" alt="Sidekick" loading="lazy">
+                </div>
+                <div class="product-card__title">Sidekick</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/pop-perimetral-lol.jpg" alt="Perimetral" loading="lazy">
+                </div>
+                <div class="product-card__title">Perimetral</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/pop-isla-jarritos.jpg" alt="Isla" loading="lazy">
+                </div>
+                <div class="product-card__title">Isla</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/pop-glorificador-eucerin.jpg" alt="Glorificador" loading="lazy">
+                </div>
+                <div class="product-card__title">Glorificador</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/pop-vestimenta-huggies.jpg" alt="Vestimenta de Góndola" loading="lazy">
+                </div>
+                <div class="product-card__title">Vestimenta</div>
+              </div>
+              <div class="product-card">
+                <div class="product-card__media">
+                  <img src="assets/pop-counter-evenflo.jpg" alt="Counter" loading="lazy">
+                </div>
+                <div class="product-card__title">Counter</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- MOBILIARIO -->
+      <article class="section-card reveal" id="mobiliario" data-expanded="false">
+        <button class="section-card__teaser" onclick="toggleSection(this)">
+          <div class="section-card__teaser-media">
+            <img src="assets/div-mobiliario.jpg" alt="Mobiliario" loading="lazy">
+            <div class="section-card__badge" style="background: var(--mpg-red);">Mobiliario</div>
+          </div>
+          <div class="section-card__body">
+            <h3 class="section-card__title">Mobiliario</h3>
+            <p class="section-card__lede">
+              Concepto de diseño e imagen para sucursales, showrooms, áreas de retail y espacios comerciales. Incluye mdf, laminados, tablaroca, acrílico, metal y lettering.
+            </p>
+            <span class="section-card__cta">
+              Ver detalles
+              <span class="section-card__cta-arrow">→</span>
+            </span>
+          </div>
+        </button>
+
+        <div class="section-card__expand">
+          <div class="section-card__expand-inner">
+            <div class="section-card__divider"></div>
+            
+            <div class="gallery">
+              <div class="gallery__cell">
+                <img src="assets/mob-pyme-1.jpg" alt="PyMEfectivo Sucursal" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/mob-pyme-2.jpg" alt="PyMEfectivo Interior" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/mob-pyme-3.jpg" alt="PyMEfectivo Conferencia" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/mob-mercado-central.jpg" alt="Mercado Central" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/mob-librero.jpg" alt="Librero" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/mob-tecnolite.jpg" alt="Tecnolite Showroom" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- CASO PRÁCTICO -->
+      <article class="section-card reveal" id="caso-practico" data-expanded="false">
+        <button class="section-card__teaser" onclick="toggleSection(this)">
+          <div class="section-card__teaser-media">
+            <img src="assets/caso-peru-1.jpg" alt="Caso Práctico PepsiCo" loading="lazy">
+            <div class="section-card__badge" style="background: var(--mpg-night); border-color: var(--mpg-red);">Caso Práctico</div>
+          </div>
+          <div class="section-card__body">
+            <h3 class="section-card__title">PepsiCo</h3>
+            <p class="section-card__lede">
+              Tienda conceptual en Perú con iluminación LED, señalización de marca integrada y arquitectura de retail para productos Doritos, Cheetos, Emperador, y toda la familia de snacks y bebidas.
+            </p>
+            <span class="section-card__cta">
+              Ver galería
+              <span class="section-card__cta-arrow">→</span>
+            </span>
+          </div>
+        </button>
+
+        <div class="section-card__expand">
+          <div class="section-card__expand-inner">
+            <div class="section-card__divider"></div>
+            
+            <!-- Peru Store Gallery -->
+            <div class="gallery">
+              <div class="gallery__cell">
+                <img src="assets/caso-peru-1.jpg" alt="Tienda Perú — Doritos Cheetos" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/caso-peru-2.jpg" alt="Tienda Perú — Pake Taxo" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/caso-peru-3.jpg" alt="Tienda Perú — Gamesa" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/caso-peru-4.jpg" alt="Tienda Perú — Emperador" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/caso-peru-5.jpg" alt="Tienda Perú — Cuyitos" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/caso-peru-6.jpg" alt="Tienda Perú — Neon Y" loading="lazy">
+              </div>
+            </div>
+
+            <!-- Additional installs -->
+            <h4 style="font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; letter-spacing: 0.16em; text-transform: uppercase; margin: 3rem 0 2rem; color: var(--mpg-charcoal);">Instalaciones Adicionales</h4>
+            <div class="gallery">
+              <div class="gallery__cell">
+                <img src="assets/caso-cooler-sanluis.jpg" alt="Cooler San Luis" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/caso-flashlyte-wall.jpg" alt="Flashlyte Wall" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/caso-aperol.jpg" alt="Aperol Display" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/caso-heineken.jpg" alt="Heineken Sign" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/caso-tanqueray.jpg" alt="Tanqueray Display" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/caso-cocacola-neon.jpg" alt="Coca-Cola Neon" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/caso-delvalle.jpg" alt="Del Valle" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/caso-lemondou.jpg" alt="Lemon-Dou" loading="lazy">
+              </div>
+              <div class="gallery__cell">
+                <img src="assets/caso-hardseltzer.jpg" alt="Hard Seltzer" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contacto">
+    <div class="container contact__inner">
+      <div class="reveal">
+        <a class="contact__url" href="https://www.mpg.com.mx" target="_blank" rel="noopener">www.mpg.com.mx</a>
+      </div>
+
+      <div class="contact__right reveal reveal--delay-2">
+        <div class="contact__person">
+          contacto
+          <span class="contact__person-name">Alejandro Villanueva</span>
+          <a class="contact__person-phone" href="tel:+525543522366">554352 2366</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer-bar">
+    Todos los derechos reservados <strong>MPG&reg; 2026</strong>
+  </footer>
+</main>
+
+<script>
+  /* NAV REVEAL */
+  (function navInit() {
+    const nav = document.getElementById('nav');
+    const hero = document.querySelector('.hero');
+    if (!nav || !hero) return;
+    const trigger = hero.offsetHeight - 80;
+    const onScroll = () => {
+      nav.classList.toggle('is-visible', window.scrollY > trigger);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  /* REVEAL ANIMATIONS */
+  (function revealInit() {
+    const els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window) || !els.length) {
+      els.forEach(el => el.classList.add('is-visible'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(el => io.observe(el));
+  })();
+
+  /* SECTION CARD TOGGLE */
+  function toggleSection(btn) {
+    const card = btn.closest('.section-card');
+    const isExpanded = card.getAttribute('data-expanded') === 'true';
+    card.setAttribute('data-expanded', !isExpanded);
+  }
+
+  /* DEEP LINKING — auto-open section if URL has hash */
+  (function deepLinkInit() {
+    const hash = window.location.hash;
+    if (!hash) return;
+    const card = document.querySelector(hash);
+    if (card && card.classList.contains('section-card')) {
+      setTimeout(() => {
+        card.setAttribute('data-expanded', 'true');
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 600);
+    }
+  })();
+
+  /* NAV LINK CLICKS — auto-open sections */
+  document.querySelectorAll('.nav__link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const hash = link.getAttribute('href');
+      if (!hash || !hash.startsWith('#')) return;
+      const card = document.querySelector(hash);
+      if (card && card.classList.contains('section-card')) {
+        e.preventDefault();
+        card.setAttribute('data-expanded', 'true');
+        setTimeout(() => {
+          card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
