@@ -225,6 +225,7 @@
       background: 
         radial-gradient(ellipse 60% 80% at 95% 50%, rgba(227, 6, 19, 0.35) 0%, transparent 60%),
         radial-gradient(ellipse 50% 70% at 0% 60%, rgba(139, 0, 0, 0.25) 0%, transparent 60%);
+      opacity: 0.4; /* Reduce background image opacity to let Three.js lights show through */
     }
     .hero__bg img {
       width: 100%;
@@ -1346,7 +1347,7 @@
 
   /* ===================================================================
      THREE.JS INTERACTIVE HERO LIGHTS
-     Two red light sources that follow mouse/touch and intensify on scroll
+     Recreates the subtle red light streaks from background with interactivity
   =================================================================== */
   (function initHeroLights() {
     const canvas = document.getElementById('hero-canvas');
@@ -1355,10 +1356,8 @@
 
     // Scene setup
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x000000, 10, 50);
-    
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 15;
+    camera.position.z = 10;
 
     const renderer = new THREE.WebGLRenderer({ 
       canvas, 
@@ -1368,58 +1367,73 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Create two red lights (left and right)
-    const leftLight = new THREE.PointLight(0xff0000, 2, 50);
-    leftLight.position.set(-8, 0, 5);
+    // Create radial gradient texture for light streaks
+    function createGradientTexture() {
+      const size = 512;
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const context = canvas.getContext('2d');
+      
+      const gradient = context.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+      gradient.addColorStop(0, 'rgba(227, 6, 19, 0.6)');
+      gradient.addColorStop(0.3, 'rgba(227, 6, 19, 0.3)');
+      gradient.addColorStop(0.6, 'rgba(139, 0, 0, 0.15)');
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, size, size);
+      
+      const texture = new THREE.CanvasTexture(canvas);
+      return texture;
+    }
+
+    const gradientTexture = createGradientTexture();
+
+    // Left red light streak (diagonal, like in the original)
+    const leftGeometry = new THREE.PlaneGeometry(18, 12);
+    const leftMaterial = new THREE.MeshBasicMaterial({
+      map: gradientTexture,
+      transparent: true,
+      opacity: 0.35,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    const leftLight = new THREE.Mesh(leftGeometry, leftMaterial);
+    leftLight.position.set(-6, 0, 0);
+    leftLight.rotation.z = Math.PI * 0.15; // Slight rotation for diagonal effect
     scene.add(leftLight);
 
-    const rightLight = new THREE.PointLight(0xff0000, 2, 50);
-    rightLight.position.set(8, 0, 5);
+    // Right red light streak (diagonal, opposite direction)
+    const rightGeometry = new THREE.PlaneGeometry(18, 12);
+    const rightMaterial = new THREE.MeshBasicMaterial({
+      map: gradientTexture,
+      transparent: true,
+      opacity: 0.35,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    const rightLight = new THREE.Mesh(rightGeometry, rightMaterial);
+    rightLight.position.set(6, 0, 0);
+    rightLight.rotation.z = -Math.PI * 0.15; // Opposite rotation
     scene.add(rightLight);
 
-    // Add subtle ambient light
-    const ambientLight = new THREE.AmbientLight(0x1a1a1a, 0.3);
-    scene.add(ambientLight);
-
-    // Create glowing spheres for the lights (visual representation)
-    const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-    const leftGlow = new THREE.Mesh(
-      sphereGeometry,
-      new THREE.MeshBasicMaterial({ 
-        color: 0xff0000, 
-        transparent: true, 
-        opacity: 0.8 
-      })
-    );
-    leftGlow.position.copy(leftLight.position);
-    scene.add(leftGlow);
-
-    const rightGlow = new THREE.Mesh(
-      sphereGeometry,
-      new THREE.MeshBasicMaterial({ 
-        color: 0xff0000, 
-        transparent: true, 
-        opacity: 0.8 
-      })
-    );
-    rightGlow.position.copy(rightLight.position);
-    scene.add(rightGlow);
-
-    // Add particles for atmosphere
+    // Add subtle particles for atmosphere
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 200;
+    const particlesCount = 150;
     const positions = new Float32Array(particlesCount * 3);
     
     for (let i = 0; i < particlesCount * 3; i++) {
-      positions[i] = (Math.random() - 0.5) * 50;
+      positions[i] = (Math.random() - 0.5) * 40;
     }
     
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     const particlesMaterial = new THREE.PointsMaterial({
-      color: 0x888888,
-      size: 0.05,
+      color: 0x666666,
+      size: 0.03,
       transparent: true,
-      opacity: 0.6
+      opacity: 0.3,
+      blending: THREE.AdditiveBlending
     });
     const particles = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particles);
@@ -1433,12 +1447,10 @@
       targetMouse.y = -(clientY / window.innerHeight) * 2 + 1;
     }
 
-    // Mouse events
     window.addEventListener('mousemove', (e) => {
       updateMousePosition(e.clientX, e.clientY);
     });
 
-    // Touch events for mobile
     window.addEventListener('touchmove', (e) => {
       if (e.touches.length > 0) {
         updateMousePosition(e.touches[0].clientX, e.touches[0].clientY);
@@ -1447,8 +1459,6 @@
 
     // Scroll-based intensity
     let scrollProgress = 0;
-    let baseIntensity = 2;
-    let maxIntensity = 8;
 
     function updateScroll() {
       const heroHeight = hero.offsetHeight;
@@ -1464,32 +1474,39 @@
       requestAnimationFrame(animate);
 
       // Smooth mouse interpolation (lerp)
-      mouse.x += (targetMouse.x - mouse.x) * 0.05;
-      mouse.y += (targetMouse.y - mouse.y) * 0.05;
+      mouse.x += (targetMouse.x - mouse.x) * 0.03;
+      mouse.y += (targetMouse.y - mouse.y) * 0.03;
 
-      // Update light positions based on mouse with offset
-      const offsetX = mouse.x * 5;
-      const offsetY = mouse.y * 3;
+      // Update light positions based on mouse with subtle movement
+      const offsetX = mouse.x * 2;
+      const offsetY = mouse.y * 1.5;
 
-      leftLight.position.x = -8 + offsetX;
+      leftLight.position.x = -6 + offsetX;
       leftLight.position.y = 0 + offsetY;
-      leftGlow.position.copy(leftLight.position);
-
-      rightLight.position.x = 8 + offsetX;
-      rightLight.position.y = 0 + offsetY;
-      rightGlow.position.copy(rightLight.position);
-
-      // Update intensity based on scroll (smooth transition)
-      const currentIntensity = baseIntensity + (maxIntensity - baseIntensity) * scrollProgress;
-      leftLight.intensity = currentIntensity;
-      rightLight.intensity = currentIntensity;
       
-      // Update glow opacity
-      leftGlow.material.opacity = 0.5 + scrollProgress * 0.5;
-      rightGlow.material.opacity = 0.5 + scrollProgress * 0.5;
+      rightLight.position.x = 6 + offsetX;
+      rightLight.position.y = 0 + offsetY;
+
+      // Update opacity based on scroll (intensify effect)
+      const baseOpacity = 0.35;
+      const maxOpacity = 0.75;
+      const currentOpacity = baseOpacity + (maxOpacity - baseOpacity) * scrollProgress;
+      
+      leftMaterial.opacity = currentOpacity;
+      rightMaterial.opacity = currentOpacity;
+
+      // Subtle scale pulse based on scroll
+      const scale = 1 + scrollProgress * 0.3;
+      leftLight.scale.set(scale, scale, 1);
+      rightLight.scale.set(scale, scale, 1);
+
+      // Very subtle rotation
+      leftLight.rotation.z = Math.PI * 0.15 + mouse.x * 0.05;
+      rightLight.rotation.z = -Math.PI * 0.15 - mouse.x * 0.05;
 
       // Subtle particle rotation
-      particles.rotation.y += 0.0002;
+      particles.rotation.y += 0.0001;
+      particles.rotation.x = mouse.y * 0.02;
 
       renderer.render(scene, camera);
     }
@@ -1506,14 +1523,12 @@
     // Start animation
     animate();
 
-    // Cleanup when hero is out of view (performance optimization)
+    // Cleanup when hero is out of view (performance)
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) {
-          // Pause rendering when hero is not visible
           renderer.setAnimationLoop(null);
         } else {
-          // Resume rendering
           renderer.setAnimationLoop(animate);
         }
       });
